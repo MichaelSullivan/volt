@@ -52,3 +52,13 @@ docs/_build/
 
 # PyBuilder
 target/
+
+# IDEA
+*.iml
+.idea
+
+# Vagrant
+.vagrant
+
+# Mac
+.DS_Store

@@ -1,0 +1,3 @@
+---
+- name: install pip
+  apt: name='python-pip'={{ python_pip_version }}

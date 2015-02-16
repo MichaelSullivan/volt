@@ -1,0 +1,19 @@
+- name: docker repository key for apt
+  apt_key: url=http://get.docker.io/gpg id=A88D21E9
+
+- name: add apt sources for docker repository
+  apt_repository: repo='deb https://get.docker.io/ubuntu docker main' state=present
+
+- name: update package manager
+  apt: update_cache=True cache_valid_time={{ apt_cache_valid_time }}
+
+- name: ensure docker is installed
+  apt: name=lxc-docker-{{ docker_version }} force=yes
+  notify:
+  - restart docker
+
+- name: docker host listens on port 2375
+  # TODO: replace this static dns ip
+  lineinfile: dest=/etc/default/docker state=present line='DOCKER_OPTS="--dns 10.1.0.22 -H tcp://0.0.0.0:2375 -H unix:///var/run/docker.sock"'
+  notify:
+  - restart docker

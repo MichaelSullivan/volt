@@ -1,0 +1,21 @@
+---
+# Install fig in the manner that they recommend
+# TODO: consider installing to the user's ~./bin instead
+
+- name: get uname output
+  command: uname -s
+  register: uname_s
+  changed_when: False
+
+- name: get uname output
+  command: uname -m
+  register: uname_m
+  changed_when: False
+
+- name: installing fig binary {{ fig_version }}
+  get_url:
+   url=https://github.com/docker/fig/releases/download/{{ fig_version }}/fig-{{ uname_s.stdout_lines[0] }}-{{ uname_m.stdout_lines[0] }}
+   dest=/usr/local/bin/fig
+
+- name: make downloaded file executable
+  file: dest=/usr/local/bin/fig mode=755

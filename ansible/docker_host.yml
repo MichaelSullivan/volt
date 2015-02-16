@@ -1,0 +1,29 @@
+---
+- hosts: default
+  vars:
+    apt_cache_valid_time: 14400 # hours*60*60
+    docker_version: 1.3.3
+    # TODO: get rid of the ubuntu but still specify version
+    nginx_version: 1.4.6-1ubuntu3.1
+    dnsmasq_version: 2.68-1
+    sshpass_version: 1.05-1
+    python_pip_version: 1.5.4-1
+    ansible_version: 1.7.2
+    docker_py_version: 0.6.0
+    netifaces_version: 0.10.4
+    psutil_version: 2.1.3
+    packer_version: 0.7.5
+    fig_version: 1.0.1
+  roles:
+    - docker
+    - nginx
+    - dnsmasq
+    - sshpass
+    - pip
+    - ansible
+    - sshkey
+    - docker-py
+    - netifaces
+    - psutil
+    - packer
+    - fig

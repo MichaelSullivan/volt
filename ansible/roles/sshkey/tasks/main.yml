@@ -1,0 +1,11 @@
+---
+#
+- name: check key created
+  stat: path=.ssh/id_rsa
+  register: key
+
+- name: generate ssh keys for container password-less authentication
+  sudo: False
+  shell: ssh-keygen -b 2048 -t rsa -f .ssh/id_rsa -q -N ""
+  when: not key.stat.exists
+

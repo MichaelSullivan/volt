@@ -1,0 +1,41 @@
+---
+# run a lean dns server for the docker containers to use
+
+- name: update package manager
+  apt: update_cache=True cache_valid_time={{ apt_cache_valid_time }}
+
+- name: install dnsmasq
+  apt: name=dnsmasq={{ dnsmasq_version }} force=yes
+  register: installed
+  notify: restart dnsmasq
+
+# create the dnsmasq directory for adding files that control ip and name mapping
+# use sudo killall -SIGHUP dnsmasq to reload files
+- name: create the dnsmasq directory
+  file: dest=/etc/dnsmasq.d state=directory
+  file: dest=/etc/dnsmasq.hosts.d state=directory
+  when: installed|changed
+
+# base configuration for dnsmasq
+- lineinfile: dest=/etc/dnsmasq.conf insertafter="EOF" line="# do not start a dhcp interface"
+  when: installed|changed
+- lineinfile: dest=/etc/dnsmasq.conf insertafter="EOF" line="no-dhcp-interface="
+  when: installed|changed
+- lineinfile: dest=/etc/dnsmasq.conf insertafter="EOF" line="# only start dns for localhost and docker"
+  when: installed|changed
+- lineinfile: dest=/etc/dnsmasq.conf insertafter="EOF" line="interface=lo"
+  when: installed|changed
+- lineinfile: dest=/etc/dnsmasq.conf insertafter="EOF" line="interface=docker0"
+  when: installed|changed
+- lineinfile: dest=/etc/dnsmasq.conf insertafter="EOF" line="# the directory for configuration files"
+  when: installed|changed
+- lineinfile: dest=/etc/dnsmasq.conf insertafter="EOF" line="conf-dir=/etc/dnsmasq.d"
+  when: installed|changed
+- lineinfile: dest=/etc/dnsmasq.conf insertafter="EOF" line="# dont use the hosts file"
+  when: installed|changed
+- lineinfile: dest=/etc/dnsmasq.conf insertafter="EOF" line="no-hosts"
+  when: installed|changed
+- lineinfile: dest=/etc/dnsmasq.conf insertafter="EOF" line="# the directory for /etc/hosts (like) files"
+  when: installed|changed
+- lineinfile: dest=/etc/dnsmasq.conf insertafter="EOF" line="addn-hosts=/etc/dnsmasq.hosts.d"
+  when: installed|changed

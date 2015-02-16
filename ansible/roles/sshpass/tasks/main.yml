@@ -1,0 +1,3 @@
+---
+- name: install sshpass
+  apt: name='sshpass'={{ sshpass_version }}

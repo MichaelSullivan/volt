@@ -1,0 +1,5 @@
+- name: update package manager
+  apt: update_cache=True cache_valid_time={{ apt_cache_valid_time }}
+
+- name: install nginx
+  apt: name=nginx={{ nginx_version }}

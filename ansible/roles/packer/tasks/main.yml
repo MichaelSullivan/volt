@@ -1,0 +1,20 @@
+---
+#
+- apt: name=unzip
+  when: ansible_os_family == "Debian"
+
+- stat: path=/tmp/packer_{{ packer_version }}_linux_amd64.zip
+  register: packer_exists
+
+- name: installing packer binary {{ packer_version }}
+  get_url:
+   url=https://dl.bintray.com/mitchellh/packer/packer_{{ packer_version }}_linux_amd64.zip
+   dest=/tmp
+  when: not packer_exists.stat.exists
+
+# From installation page: https://www.packer.io/intro/getting-started/setup.html
+- shell: unzip /tmp/packer_{{ packer_version }}_linux_amd64.zip -d /usr/local/packer
+  args:
+    creates: /usr/local/packer
+
+# TODO: make links in bin dir

@@ -1,0 +1,7 @@
+---
+# install python dev for netifaces
+- name: install python-dev
+  apt: name='python-dev'
+
+- name: install netifaces
+  pip: name='netifaces' version={{ netifaces_version }}
